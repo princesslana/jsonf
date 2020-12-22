@@ -1,3 +1,4 @@
 .env
 .jqwik-database
+etc/codesigning.asc
 target
