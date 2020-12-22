@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class JacksonF implements JsonF {
 
@@ -32,6 +34,19 @@ public class JacksonF implements JsonF {
   @Override
   public JacksonF get(String key) {
     return new JacksonF(json.flatMap(j -> Optional.ofNullable(j.get(key))));
+  }
+
+  @Override
+  public JacksonF get(int idx) {
+    return new JacksonF(json.flatMap(j -> Optional.ofNullable(j.get(idx))));
+  }
+
+  @Override
+  public Stream<JsonF> stream() {
+    return json.stream()
+        .filter(JsonNode::isArray)
+        .flatMap(j -> StreamSupport.stream(j.spliterator(), false))
+        .map(JacksonF::from);
   }
 
   public static JacksonF parse(String json) {

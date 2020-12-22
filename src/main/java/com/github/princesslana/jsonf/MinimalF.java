@@ -4,6 +4,8 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class MinimalF implements JsonF {
 
@@ -32,6 +34,21 @@ public class MinimalF implements JsonF {
   public MinimalF get(String key) {
     return new MinimalF(
         Optionals.flatMapNullableIf(json, JsonValue::isObject, j -> j.asObject().get(key)));
+  }
+
+  @Override
+  public MinimalF get(int idx) {
+    var array = Optionals.mapIf(json, JsonValue::isArray, JsonValue::asArray);
+
+    return new MinimalF(Optionals.mapIf(array, j -> 0 <= idx && idx < j.size(), j -> j.get(idx)));
+  }
+
+  @Override
+  public Stream<JsonF> stream() {
+    return json.stream()
+        .filter(JsonValue::isArray)
+        .flatMap(j -> StreamSupport.stream(j.asArray().spliterator(), false))
+        .map(MinimalF::from);
   }
 
   public static MinimalF parse(String json) {

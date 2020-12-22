@@ -6,6 +6,8 @@ import com.google.gson.JsonPrimitive;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class GsonF implements JsonF {
   private final Optional<JsonElement> json;
@@ -36,6 +38,21 @@ public class GsonF implements JsonF {
     return new GsonF(
         Optionals.flatMapNullableIf(
             json, JsonElement::isJsonObject, j -> j.getAsJsonObject().get(key)));
+  }
+
+  @Override
+  public GsonF get(int idx) {
+    var array = Optionals.mapIf(json, JsonElement::isJsonArray, JsonElement::getAsJsonArray);
+
+    return new GsonF(Optionals.mapIf(array, j -> 0 <= idx && idx < j.size(), j -> j.get(idx)));
+  }
+
+  @Override
+  public Stream<JsonF> stream() {
+    return json.stream()
+        .filter(JsonElement::isJsonArray)
+        .flatMap(j -> StreamSupport.stream(j.getAsJsonArray().spliterator(), false))
+        .map(GsonF::from);
   }
 
   public static GsonF parse(String json) {

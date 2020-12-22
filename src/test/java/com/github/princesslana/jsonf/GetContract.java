@@ -31,4 +31,16 @@ public interface GetContract extends WithJsonFParser {
     var json = Json.object().add(key, Json.object()).toString();
     Assertions.assertThat(parse(json).get(key).get(key).asString()).isEmpty();
   }
+
+  @Property
+  default void get_whenJsonArray_shouldFetch(@ForAll String value) {
+    var json = Json.array(value).toString();
+    Assertions.assertThat(parse(json).get(0).asString()).isPresent().contains(value);
+  }
+
+  @Property
+  default void get_whenNoSuchIndex_shouldFetchEmpty(@ForAll int idx) {
+    var json = Json.array().toString();
+    Assertions.assertThat(parse(json).get(idx).asString()).isEmpty();
+  }
 }
