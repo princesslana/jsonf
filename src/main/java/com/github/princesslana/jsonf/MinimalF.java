@@ -2,6 +2,7 @@ package com.github.princesslana.jsonf;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class MinimalF implements JsonF {
@@ -10,6 +11,11 @@ public class MinimalF implements JsonF {
 
   private MinimalF(JsonValue json) {
     this.json = json;
+  }
+
+  @Override
+  public Optional<BigDecimal> asNumber() {
+    return json.isNumber() ? Optional.of(new BigDecimal(json.toString())) : Optional.empty();
   }
 
   @Override
