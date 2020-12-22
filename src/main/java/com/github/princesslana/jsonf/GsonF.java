@@ -13,6 +13,13 @@ public class GsonF implements JsonF {
   }
 
   @Override
+  public Optional<Boolean> asBoolean() {
+    return json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean()
+        ? Optional.of(json.getAsBoolean())
+        : Optional.empty();
+  }
+
+  @Override
   public Optional<BigDecimal> asNumber() {
     return json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber()
         ? Optional.of(json.getAsBigDecimal())

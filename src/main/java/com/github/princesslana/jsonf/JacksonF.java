@@ -15,6 +15,11 @@ public class JacksonF implements JsonF {
   }
 
   @Override
+  public Optional<Boolean> asBoolean() {
+    return json.isBoolean() ? Optional.of(json.asBoolean()) : Optional.empty();
+  }
+
+  @Override
   public Optional<BigDecimal> asNumber() {
     return json.isNumber() ? Optional.of(json.decimalValue()) : Optional.empty();
   }
