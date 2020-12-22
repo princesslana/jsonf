@@ -7,25 +7,31 @@ import java.util.Optional;
 
 public class MinimalF implements JsonF {
 
-  private final JsonValue json;
+  private final Optional<JsonValue> json;
 
-  private MinimalF(JsonValue json) {
+  private MinimalF(Optional<JsonValue> json) {
     this.json = json;
   }
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return json.isBoolean() ? Optional.of(json.asBoolean()) : Optional.empty();
+    return Optionals.mapIf(json, JsonValue::isBoolean, JsonValue::asBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return json.isNumber() ? Optional.of(new BigDecimal(json.toString())) : Optional.empty();
+    return Optionals.mapIf(json, JsonValue::isNumber, j -> new BigDecimal(j.toString()));
   }
 
   @Override
   public Optional<String> asString() {
-    return json.isString() ? Optional.of(json.asString()) : Optional.empty();
+    return Optionals.mapIf(json, JsonValue::isString, JsonValue::asString);
+  }
+
+  @Override
+  public MinimalF get(String key) {
+    return new MinimalF(
+        Optionals.flatMapNullableIf(json, JsonValue::isObject, j -> j.asObject().get(key)));
   }
 
   public static MinimalF parse(String json) {
@@ -33,6 +39,6 @@ public class MinimalF implements JsonF {
   }
 
   public static MinimalF from(JsonValue json) {
-    return new MinimalF(json);
+    return new MinimalF(Optional.of(json));
   }
 }

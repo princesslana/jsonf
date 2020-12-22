@@ -2,35 +2,40 @@ package com.github.princesslana.jsonf;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class GsonF implements JsonF {
-  private final JsonElement json;
+  private final Optional<JsonElement> json;
 
-  private GsonF(JsonElement json) {
+  private GsonF(Optional<JsonElement> json) {
     this.json = json;
   }
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean()
-        ? Optional.of(json.getAsBoolean())
-        : Optional.empty();
+    return Optionals.mapIf(
+        json, isPrimitiveAnd(JsonPrimitive::isBoolean), JsonElement::getAsBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber()
-        ? Optional.of(json.getAsBigDecimal())
-        : Optional.empty();
+    return Optionals.mapIf(
+        json, isPrimitiveAnd(JsonPrimitive::isNumber), JsonElement::getAsBigDecimal);
   }
 
   @Override
   public Optional<String> asString() {
-    return json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()
-        ? Optional.of(json.getAsString())
-        : Optional.empty();
+    return Optionals.mapIf(json, isPrimitiveAnd(JsonPrimitive::isString), JsonElement::getAsString);
+  }
+
+  @Override
+  public GsonF get(String key) {
+    return new GsonF(
+        Optionals.flatMapNullableIf(
+            json, JsonElement::isJsonObject, j -> j.getAsJsonObject().get(key)));
   }
 
   public static GsonF parse(String json) {
@@ -38,6 +43,10 @@ public class GsonF implements JsonF {
   }
 
   public static GsonF from(JsonElement json) {
-    return new GsonF(json);
+    return new GsonF(Optional.of(json));
+  }
+
+  private static Predicate<JsonElement> isPrimitiveAnd(Predicate<JsonPrimitive> p) {
+    return el -> el.isJsonPrimitive() && p.test(el.getAsJsonPrimitive());
   }
 }

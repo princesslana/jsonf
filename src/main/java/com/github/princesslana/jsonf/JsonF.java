@@ -10,4 +10,6 @@ public interface JsonF {
   Optional<BigDecimal> asNumber();
 
   Optional<String> asString();
+
+  JsonF get(String key);
 }

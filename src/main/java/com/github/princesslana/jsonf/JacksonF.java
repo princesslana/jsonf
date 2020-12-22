@@ -8,25 +8,30 @@ import java.util.Optional;
 
 public class JacksonF implements JsonF {
 
-  private final JsonNode json;
+  private final Optional<JsonNode> json;
 
-  private JacksonF(JsonNode json) {
+  private JacksonF(Optional<JsonNode> json) {
     this.json = json;
   }
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return json.isBoolean() ? Optional.of(json.asBoolean()) : Optional.empty();
+    return Optionals.mapIf(json, JsonNode::isBoolean, JsonNode::asBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return json.isNumber() ? Optional.of(json.decimalValue()) : Optional.empty();
+    return Optionals.mapIf(json, JsonNode::isNumber, JsonNode::decimalValue);
   }
 
   @Override
   public Optional<String> asString() {
-    return json.isTextual() ? Optional.of(json.asText()) : Optional.empty();
+    return Optionals.mapIf(json, JsonNode::isTextual, JsonNode::asText);
+  }
+
+  @Override
+  public JacksonF get(String key) {
+    return new JacksonF(json.flatMap(j -> Optional.ofNullable(j.get(key))));
   }
 
   public static JacksonF parse(String json) {
@@ -38,6 +43,6 @@ public class JacksonF implements JsonF {
   }
 
   public static JacksonF from(JsonNode json) {
-    return new JacksonF(json);
+    return new JacksonF(Optional.of(json));
   }
 }
