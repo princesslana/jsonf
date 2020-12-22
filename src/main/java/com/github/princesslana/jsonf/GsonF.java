@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/** Implementation of JsonF using Gson. */
 public class GsonF implements JsonF {
   private final Optional<JsonElement> json;
 
@@ -55,10 +56,23 @@ public class GsonF implements JsonF {
         .map(GsonF::from);
   }
 
+  /**
+   * Parse the given String using Gson.
+   *
+   * @param json input string
+   * @return created GsonF instance
+   * @throws JsonFException if parsing failed
+   */
   public static GsonF parse(String json) {
     return from(JsonParser.parseString(json));
   }
 
+  /**
+   * Create GsonF instance from a Gson value.
+   *
+   * @param json the Gson value
+   * @return created Gson instance
+   */
   public static GsonF from(JsonElement json) {
     return new GsonF(Optional.of(json));
   }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/** Implementation of JsonF using Jackson. */
 public class JacksonF implements JsonF {
 
   private final Optional<JsonNode> json;
@@ -49,6 +50,13 @@ public class JacksonF implements JsonF {
         .map(JacksonF::from);
   }
 
+  /**
+   * Parse the given string using Jackson.
+   *
+   * @param json the input string
+   * @return created JacksonF instance
+   * @throws JsonFException if parsing failed
+   */
   public static JacksonF parse(String json) {
     try {
       return from(new ObjectMapper().readTree(json));
@@ -57,6 +65,12 @@ public class JacksonF implements JsonF {
     }
   }
 
+  /**
+   * Create a JacksonF instance from a Jackson value.
+   *
+   * @param json the Jackson value
+   * @return created JacksonF instance
+   */
   public static JacksonF from(JsonNode json) {
     return new JacksonF(Optional.of(json));
   }

@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/** Implementation of JsonF using minimal-json lib. */
 public class MinimalF implements JsonF {
 
   private final Optional<JsonValue> json;
@@ -51,10 +52,23 @@ public class MinimalF implements JsonF {
         .map(MinimalF::from);
   }
 
+  /**
+   * Parse the given string using minimal-json.
+   *
+   * @param json input string
+   * @return created MinimalF instance
+   * @throws JsonFException if parsing failed
+   */
   public static MinimalF parse(String json) {
     return from(Json.parse(json));
   }
 
+  /**
+   * Create a MinimalF instance from a minimal-json value.
+   *
+   * @param json the minimal-json value
+   * @return created MinimalF instance
+   */
   public static MinimalF from(JsonValue json) {
     return new MinimalF(Optional.of(json));
   }
