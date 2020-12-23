@@ -19,33 +19,31 @@ public class GsonF implements JsonF {
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return Optionals.mapIf(
-        json, isPrimitiveAnd(JsonPrimitive::isBoolean), JsonElement::getAsBoolean);
+    return json.filter(isPrimitiveAnd(JsonPrimitive::isBoolean)).map(JsonElement::getAsBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return Optionals.mapIf(
-        json, isPrimitiveAnd(JsonPrimitive::isNumber), JsonElement::getAsBigDecimal);
+    return json.filter(isPrimitiveAnd(JsonPrimitive::isNumber)).map(JsonElement::getAsBigDecimal);
   }
 
   @Override
   public Optional<String> asString() {
-    return Optionals.mapIf(json, isPrimitiveAnd(JsonPrimitive::isString), JsonElement::getAsString);
+    return json.filter(isPrimitiveAnd(JsonPrimitive::isString)).map(JsonElement::getAsString);
   }
 
   @Override
   public GsonF get(String key) {
     return new GsonF(
-        Optionals.flatMapNullableIf(
-            json, JsonElement::isJsonObject, j -> j.getAsJsonObject().get(key)));
+        json.filter(JsonElement::isJsonObject)
+            .flatMap(j -> Optional.ofNullable(j.getAsJsonObject().get(key))));
   }
 
   @Override
   public GsonF get(int idx) {
-    var array = Optionals.mapIf(json, JsonElement::isJsonArray, JsonElement::getAsJsonArray);
+    var array = json.filter(JsonElement::isJsonArray).map(JsonElement::getAsJsonArray);
 
-    return new GsonF(Optionals.mapIf(array, j -> 0 <= idx && idx < j.size(), j -> j.get(idx)));
+    return new GsonF((array.filter(j -> 0 <= idx && idx < j.size()).map(j -> j.get(idx))));
   }
 
   @Override

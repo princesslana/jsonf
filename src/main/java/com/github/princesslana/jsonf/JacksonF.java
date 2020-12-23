@@ -19,17 +19,17 @@ public class JacksonF implements JsonF {
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return Optionals.mapIf(json, JsonNode::isBoolean, JsonNode::asBoolean);
+    return json.filter(JsonNode::isBoolean).map(JsonNode::asBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return Optionals.mapIf(json, JsonNode::isNumber, JsonNode::decimalValue);
+    return json.filter(JsonNode::isNumber).map(JsonNode::decimalValue);
   }
 
   @Override
   public Optional<String> asString() {
-    return Optionals.mapIf(json, JsonNode::isTextual, JsonNode::asText);
+    return json.filter(JsonNode::isTextual).map(JsonNode::asText);
   }
 
   @Override
