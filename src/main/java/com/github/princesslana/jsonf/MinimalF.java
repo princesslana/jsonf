@@ -18,30 +18,30 @@ public class MinimalF implements JsonF {
 
   @Override
   public Optional<Boolean> asBoolean() {
-    return Optionals.mapIf(json, JsonValue::isBoolean, JsonValue::asBoolean);
+    return json.filter(JsonValue::isBoolean).map(JsonValue::asBoolean);
   }
 
   @Override
   public Optional<BigDecimal> asNumber() {
-    return Optionals.mapIf(json, JsonValue::isNumber, j -> new BigDecimal(j.toString()));
+    return json.filter(JsonValue::isNumber).map(j -> new BigDecimal(j.toString()));
   }
 
   @Override
   public Optional<String> asString() {
-    return Optionals.mapIf(json, JsonValue::isString, JsonValue::asString);
+    return json.filter(JsonValue::isString).map(JsonValue::asString);
   }
 
   @Override
   public MinimalF get(String key) {
     return new MinimalF(
-        Optionals.flatMapNullableIf(json, JsonValue::isObject, j -> j.asObject().get(key)));
+        json.filter(JsonValue::isObject).flatMap(j -> Optional.ofNullable(j.asObject().get(key))));
   }
 
   @Override
   public MinimalF get(int idx) {
-    var array = Optionals.mapIf(json, JsonValue::isArray, JsonValue::asArray);
+    var array = json.filter(JsonValue::isArray).map(JsonValue::asArray);
 
-    return new MinimalF(Optionals.mapIf(array, j -> 0 <= idx && idx < j.size(), j -> j.get(idx)));
+    return new MinimalF(array.filter(j -> 0 <= idx && idx < j.size()).map(j -> j.get(idx)));
   }
 
   @Override
