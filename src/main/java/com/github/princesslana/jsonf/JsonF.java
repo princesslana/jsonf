@@ -1,6 +1,7 @@
 package com.github.princesslana.jsonf;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
  * involves using the get methods to navigate to your chosen element, and the asXxx methods to fetch
  * the value.
  */
-public interface JsonF {
+public interface JsonF extends Iterable<JsonF> {
 
   /**
    * Fetch the given value as a boolean. Will return empty if the value is not a boolean or does not
@@ -89,6 +90,11 @@ public interface JsonF {
    * @return Stream of JsonF instances for elements in this Json Array
    */
   Stream<JsonF> stream();
+
+  @Override
+  default Iterator<JsonF> iterator() {
+    return stream().iterator();
+  }
 
   /**
    * Apply a function to all elements in this Json Array. If this is not an Array then an empty
