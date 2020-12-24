@@ -1,4 +1,5 @@
 package com.github.princesslana.jsonf;
+
 public interface JsonFContract
     extends AsBooleanContract,
         AsNumberContract,
