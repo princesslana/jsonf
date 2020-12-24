@@ -1,11 +1,11 @@
 package com.github.princesslana.jsonf;
-
 public interface JsonFContract
     extends AsBooleanContract,
         AsNumberContract,
         AsStringContract,
         GetContract,
         IsEqualToContract,
+        ParseContract,
         StreamContract {}
 
 class TestGsonF implements JsonFContract {

@@ -1,8 +1,12 @@
 package com.github.princesslana.jsonf;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -11,6 +15,10 @@ import java.util.stream.StreamSupport;
 
 /** Implementation of JsonF using Gson. */
 public class GsonF implements JsonF {
+
+  private static final TypeAdapter<JsonElement> STRICT_GSON_ADAPTER =
+      new Gson().getAdapter(JsonElement.class);
+
   private final Optional<JsonElement> json;
 
   private GsonF(Optional<JsonElement> json) {
@@ -55,14 +63,27 @@ public class GsonF implements JsonF {
   }
 
   /**
-   * Parse the given String using Gson.
+   * Parse the given String using Gson. See https://stackoverflow.com/a/47890960 for an explanation
+   * of why this can not be simpler.
    *
    * @param json input string
    * @return created GsonF instance
    * @throws JsonFException if parsing failed
    */
   public static GsonF parse(String json) {
-    return from(JsonParser.parseString(json));
+    if (json == null) {
+      throw new JsonFException("Refusing to parse blank input");
+    }
+
+    try {
+      try (var reader = new JsonReader(new StringReader(json))) {
+        var result = STRICT_GSON_ADAPTER.read(reader);
+        reader.hasNext();
+        return GsonF.from(result);
+      }
+    } catch (IOException e) {
+      throw new JsonFException(e);
+    }
   }
 
   /**

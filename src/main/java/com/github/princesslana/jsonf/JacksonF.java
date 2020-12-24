@@ -58,10 +58,15 @@ public class JacksonF implements JsonF {
    * @throws JsonFException if parsing failed
    */
   public static JacksonF parse(String json) {
+    if (json == null || json.isBlank()) {
+      throw new JsonFException("Refusing to parse blank input");
+    }
+
     try {
-      return from(new ObjectMapper().readTree(json));
+      var result = new ObjectMapper().readTree(json);
+      return from(result);
     } catch (JsonProcessingException e) {
-      return null;
+      throw new JsonFException(e);
     }
   }
 
