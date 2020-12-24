@@ -6,6 +6,7 @@ public interface JsonFContract
         AsStringContract,
         GetContract,
         IsEqualToContract,
+        ParseContract,
         StreamContract {}
 
 class TestGsonF implements JsonFContract {

@@ -2,6 +2,7 @@ package com.github.princesslana.jsonf;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -60,7 +61,15 @@ public class MinimalF implements JsonF {
    * @throws JsonFException if parsing failed
    */
   public static MinimalF parse(String json) {
-    return from(Json.parse(json));
+    if (json == null) {
+      throw new JsonFException("Refusing to parse null input");
+    }
+
+    try {
+      return from(Json.parse(json));
+    } catch (ParseException e) {
+      throw new JsonFException(e);
+    }
   }
 
   /**
