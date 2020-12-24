@@ -39,6 +39,56 @@ public interface JsonF extends Iterable<JsonF> {
   Optional<String> asString();
 
   /**
+   * Check if this is a value equal to rhs.
+   *
+   * @param rhs value to compare with for equality
+   * @return true if the value exists, is a boolean, and equal to rhs
+   */
+  default boolean isEqualTo(Boolean rhs) {
+    return asBoolean().map(lhs -> lhs.equals(rhs)).orElse(false);
+  }
+
+  /**
+   * Check if this is a value equal to rhs.
+   *
+   * @param rhs value to compare with for equality
+   * @return true if the value exists, is a Number, and equal to rhs
+   */
+  default boolean isEqualTo(long rhs) {
+    return isEqualTo(BigDecimal.valueOf(rhs));
+  }
+
+  /**
+   * Check if this is a value equal to rhs.
+   *
+   * @param rhs value to compare with for equality
+   * @return true if the value exists, is a Number, and equal to rhs
+   */
+  default boolean isEqualTo(double rhs) {
+    return isEqualTo(BigDecimal.valueOf(rhs));
+  }
+
+  /**
+   * Check if this is a value equal to rhs.
+   *
+   * @param rhs value to compare with for equality
+   * @return true if the value exists, is a Number, and equal to rhs
+   */
+  default boolean isEqualTo(BigDecimal rhs) {
+    return asNumber().map(lhs -> lhs.compareTo(rhs) == 0).orElse(false);
+  }
+
+  /**
+   * Check if this is a value equal to rhs.
+   *
+   * @param rhs value to compare with for equality
+   * @return true if the value exists, is a String, and equal to rhs
+   */
+  default boolean isEqualTo(String rhs) {
+    return asString().map(lhs -> lhs.equals(rhs)).orElse(false);
+  }
+
+  /**
    * Navigate into a Json Object via the given key. This method will succeed whether the given key
    * exists or not. If the key does not exist, then attempts to get values from the resulting JsonF
    * instance will simply return empty.
