@@ -159,4 +159,26 @@ public interface JsonF extends Iterable<JsonF> {
   default <T> Stream<T> flatMap(Function<JsonF, Optional<T>> f) {
     return stream().map(f).flatMap(Optional::stream);
   }
+
+  /**
+   * Parse the given string using an available Json lib.
+   *
+   * @param json input string
+   * @return created JsonF instance
+   * @throws JsonFException if parsing failed
+   */
+  static JsonF parse(String json) {
+    return Implementation.parse(json);
+  }
+
+  /**
+   * Create a JsonF instance from the given Json value. The implementation chosen will be based upon
+   * the type of the provided parameter.
+   *
+   * @param json the json value
+   * @return created JsonF instance
+   */
+  static JsonF from(Object json) {
+    return Implementation.from(json);
+  }
 }

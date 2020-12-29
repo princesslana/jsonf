@@ -32,3 +32,11 @@ class TestMinimalF implements JsonFContract {
     return MinimalF.parse(json);
   }
 }
+
+class TestJsonFReflectionImplementation implements JsonFContract {
+
+  @Override
+  public JsonF parse(String json) {
+    return JsonF.parse(json);
+  }
+}
