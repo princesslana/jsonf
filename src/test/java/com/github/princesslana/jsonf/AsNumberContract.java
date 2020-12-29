@@ -10,7 +10,7 @@ import org.assertj.core.api.Assertions;
 public interface AsNumberContract extends WithJsonFParser {
 
   private static Consumer<BigDecimal> bigDecimalEquals(BigDecimal expected) {
-    return actual -> Assertions.assertThat(actual.compareTo(expected)).isZero();
+    return actual -> Assertions.assertThat(actual).isEqualByComparingTo(expected);
   }
 
   @Property
