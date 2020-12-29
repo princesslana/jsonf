@@ -26,7 +26,7 @@ public class Implementation {
       new Def("com.github.princesslana.jsonf.JacksonF", "com.fasterxml.jackson.databind.JsonNode");
 
   private static final Def MINIMAL =
-      new Def("com.github.princesslana.jsonf.MinimalF", "com.eclipsesoruce.json.JsonValue");
+      new Def("com.github.princesslana.jsonf.MinimalF", "com.eclipsesource.json.JsonValue");
 
   private static final Def GSON =
       new Def("com.github.princesslana.jsonf.GsonF", "com.google.gson.JsonElement");
