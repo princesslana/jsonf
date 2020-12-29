@@ -6,7 +6,7 @@
   <version>${revision}</version>
   <packaging>jar</packaging>
   <name>jsonf</name>
-  <description>Simple fetching of data from JSON</description>
+  <description>JsonF is a straight forward way to fetch values from JSON</description>
   <url>https://github.com/princesslana/jsonf</url>
   <licenses>
     <license>

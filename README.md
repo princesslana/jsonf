@@ -7,7 +7,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=princesslana_jsonf&metric=coverage)](https://sonarcloud.io/dashboard?id=princesslana_jsonf)
 [![Discord](https://img.shields.io/discord/417389758470422538)](https://discord.gg/3aTVQtz)
 
-JsonF is an API for fetching values from JSON.
+JsonF is a straight forward way to fetch values from JSON.
 
 It does not implement JSON parsing itself, but instead presents a consistent
 and straight forward API on top of whichver JSON library you are already using.
