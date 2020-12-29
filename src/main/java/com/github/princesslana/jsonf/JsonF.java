@@ -31,6 +31,26 @@ public interface JsonF extends Iterable<JsonF> {
   Optional<BigDecimal> asNumber();
 
   /**
+   * Fetch the given value as a Long. Will return empty if the value is not a number or does not
+   * exist. The semantics of and any conversion is as for BigDecimal#longValue.
+   *
+   * @return empty or the referenced value as a Long
+   */
+  default Optional<Long> asLong() {
+    return asNumber().map(Number::longValue);
+  }
+
+  /**
+   * Fetch the given value as a Double. Will return empty if the value is not a number or does not
+   * exist. The semantics of any conversion is as for BigDecimal#doubleValue.
+   *
+   * @return empty or the referenced value as a Double
+   */
+  default Optional<Double> asDouble() {
+    return asNumber().map(Number::doubleValue);
+  }
+
+  /**
    * Fetch the given value as a String. Will return empty if the value is not a string or does not
    * exist.
    *
