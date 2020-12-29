@@ -42,9 +42,6 @@ public class Implementation {
         var parse = implClass.getMethod("parse", String.class);
         var from = implClass.getMethod("from", jsonClass);
 
-        parse.setAccessible(true);
-        from.setAccessible(true);
-
         INSTALLED.add(new Installed(jsonClass, parse, from));
 
         LOG.atInfo().log("Installed jsonf implementation: {}", def.implClass);
