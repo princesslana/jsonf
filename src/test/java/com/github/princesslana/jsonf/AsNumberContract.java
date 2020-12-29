@@ -21,10 +21,20 @@ public interface AsNumberContract extends WithJsonFParser {
   }
 
   @Property
+  default void asLong_whenJsonLong_shouldFetch(@ForAll long l) {
+    Assertions.assertThat(parse(Json.value(l).toString()).asLong()).isPresent().contains(l);
+  }
+
+  @Property
   default void asNumber_whenJsonDouble_shouldFetch(@ForAll double d) {
     Assertions.assertThat(parse(Json.value(d).toString()).asNumber())
         .isPresent()
         .hasValueSatisfying(bigDecimalEquals(BigDecimal.valueOf(d)));
+  }
+
+  @Property
+  default void asDouble_whenJsonDouble_shouldFetch(@ForAll double d) {
+    Assertions.assertThat(parse(Json.value(d).toString()).asDouble()).isPresent().contains(d);
   }
 
   @Property
